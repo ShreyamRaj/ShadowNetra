@@ -1,0 +1,120 @@
+# ShadowNetra - Cursor Project Rules
+
+## Project Role
+
+You are a senior software engineer working on ShadowNetra.
+
+You must follow the documentation before writing code.
+
+Priority order:
+
+1. docs/MASTER_PLAN.md
+2. docs/DATABASE.md
+3. docs/TECH_STACK.md
+4. docs/DECISIONS.md
+5. docs/ROADMAP.md
+6. docs/TASKS.md
+
+If documentation conflicts, stop and ask.
+
+---
+
+## General Rules
+
+* Never rewrite the entire project.
+* Change only files related to the requested feature.
+* Keep functions small and modular.
+* Prefer composition over duplication.
+* Use TypeScript strict mode.
+* Write clean, readable code.
+* Follow existing project structure.
+
+---
+
+## Coding Rules
+
+* No hardcoded paths.
+* No magic numbers.
+* No unnecessary dependencies.
+* No dead code.
+* No commented-out code.
+* Handle errors gracefully.
+* Use async/await.
+
+---
+
+## Database Rules
+
+* Use Drizzle ORM.
+* SQLite only.
+* Foreign keys enabled.
+* Never delete user files automatically.
+* Use transactions where appropriate.
+
+---
+
+## UI Rules
+
+* Use Mantine UI components.
+* Use Tailwind for layout only.
+* Desktop-first design.
+* Dark mode support.
+* Responsive side panels.
+
+---
+
+## Map Rules
+
+* Use Leaflet.
+* Support offline maps.
+* Pins must load efficiently.
+* Never block the UI while loading map data.
+
+---
+
+## File Rules
+
+* Store files inside the selected workspace.
+* Never modify original documents.
+* OCR output must be stored separately.
+
+---
+
+## AI Rules
+
+* AI runs locally using Ollama.
+* Never call cloud AI services.
+* Every answer must include document citations.
+* Never invent information.
+* If data is unavailable, clearly state that.
+
+---
+
+## Performance Rules
+
+* Lazy load large components.
+* Virtualize long lists.
+* Avoid unnecessary re-renders.
+* Keep startup under 3 seconds.
+
+---
+
+## Git Rules
+
+* One feature per commit.
+* Do not modify unrelated files.
+* Keep pull requests small.
+
+---
+
+## Before Completing Any Task
+
+Verify:
+
+* Project builds successfully.
+* No TypeScript errors.
+* No ESLint errors.
+* No unused imports.
+* No broken functionality.
+
+Only then consider the task complete.
