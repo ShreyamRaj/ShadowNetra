@@ -1,51 +1,82 @@
-import { useState } from "react";
-import reactLogo from "./assets/react.svg";
-import { invoke } from "@tauri-apps/api/core";
-import "./App.css";
+import { useEffect, useState } from "react";
+import { Center, Container, Loader, Stack, Text, Title } from "@mantine/core";
+import { WelcomeScreen } from "./components/workspace/WelcomeScreen";
+import { workspaceService } from "./services/WorkspaceService";
+
+function AppShell({ workspacePath }: { workspacePath: string }) {
+  return (
+    <Center mih="100vh" px="md">
+      <Container size="md" w="100%">
+        <Stack gap="md">
+          <Title order={2}>ShadowNetra</Title>
+          <Text c="dimmed">Workspace ready.</Text>
+          <Text size="sm" ff="monospace">
+            {workspacePath}
+          </Text>
+        </Stack>
+      </Container>
+    </Center>
+  );
+}
 
 function App() {
-  const [greetMsg, setGreetMsg] = useState("");
-  const [name, setName] = useState("");
+  const [workspacePath, setWorkspacePath] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    setGreetMsg(await invoke("greet", { name }));
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadWorkspace() {
+      try {
+        const isValid = await workspaceService.isWorkspaceConfiguredAndValid();
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (isValid) {
+          const path = await workspaceService.getConfiguredWorkspace();
+          setWorkspacePath(path);
+        } else {
+          setWorkspacePath(null);
+        }
+      } catch {
+        if (isMounted) {
+          setWorkspacePath(null);
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    }
+
+    void loadWorkspace();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Center mih="100vh">
+        <Loader size="lg" />
+      </Center>
+    );
   }
 
-  return (
-    <main className="container">
-      <h1>Welcome to Tauri + React</h1>
-
-      <div className="row">
-        <a href="https://vite.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://tauri.app" target="_blank">
-          <img src="/tauri.svg" className="logo tauri" alt="Tauri logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <form
-        className="row"
-        onSubmit={(e) => {
-          e.preventDefault();
-          greet();
+  if (!workspacePath) {
+    return (
+      <WelcomeScreen
+        onWorkspaceReady={(path) => {
+          setWorkspacePath(path);
         }}
-      >
-        <input
-          id="greet-input"
-          onChange={(e) => setName(e.currentTarget.value)}
-          placeholder="Enter a name..."
-        />
-        <button type="submit">Greet</button>
-      </form>
-      <p>{greetMsg}</p>
-    </main>
-  );
+      />
+    );
+  }
+
+  return <AppShell workspacePath={workspacePath} />;
 }
 
 export default App;
